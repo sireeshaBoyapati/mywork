@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns = "http://www.springframework.org/schema/beans"
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:context = "http://www.springframework.org/schema/context"
+   xmlns:mvc = "http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"   
+   xsi:schemaLocation = "http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/mvc
+      http://www.springframework.org/schema/mvc/spring-mvc.xsd
+      http://www.springframework.org/schema/tx 
+      http://www.springframework.org/schema/tx/spring-tx.xsd      
+    http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context.xsd">
+
+ 	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="controller"></context:component-scan>
+
+    <bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource">
+            <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+            <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
+            <property name="username" value="system" />
+            <property name="password" value="system" />
+    </bean>
+
+ 
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="datasource" />
+               <property name="annotatedClasses">
+             <list>
+                       <value>model.Student</value>
+               </list>
+         </property>
+    </bean>
+
+ 
+
+    <tx:annotation-driven transaction-manager="hibernateTransactionManager" proxy-target-class="true" />
+	<mvc:annotation-driven></mvc:annotation-driven>
+ 
+
+    <bean id="hibernateTransactionManager"  class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+            <property name="sessionFactory" ref="sessionFactory" />
+       </bean>
+    <bean id="studDao" class="dao.StudentDao"/>
+    <bean id="studService" class="service.StudentService"/>
+</beans>
+
